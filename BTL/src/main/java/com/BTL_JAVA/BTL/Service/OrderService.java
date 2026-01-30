@@ -31,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -295,8 +296,9 @@ public class OrderService {
 
         order.setStatus(orderStatus);
         // check nếu là COMPLETED thì chuyển Payment thành COMPLETED
-        if (orderStatus == OrderStatus.COMPLETED) {
+        if (orderStatus == OrderStatus.COMPLETED && order.getPayment().getPaymentMethod().equals("CASH")) {
             order.getPayment().setStatus(PaymentStatus.COMPLETED);
+            order.getPayment().setPaymentDate(LocalDateTime.now());
         }
         Order updatedOrder = orderRepository.save(order);
 
